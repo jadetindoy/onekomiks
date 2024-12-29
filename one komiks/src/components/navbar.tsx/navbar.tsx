@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, ChevronDown, Menu, User, Flame, Trophy, BookOpen } from 'lucide-react';
 
 const TopNavigation = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <nav className="bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg">
@@ -13,29 +15,29 @@ const TopNavigation = () => {
           {/* Left side - Logo and Navigation */}
           <div className="flex items-center">
             {/* Logo */}
-            <div className="flex-shrink-0">
-              <span className="text-2xl font-bold text-white tracking-wider">
+            <div className="flex-shrink-0" onClick={() => navigate('/')}>
+              <span className="text-2xl font-bold text-white tracking-wider cursor-pointer">
                 One<span className="text-yellow-400">Komiks</span>
               </span>
             </div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex ml-8 space-x-6">
-              <a href="/" className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
+              <button onClick={() => navigate('/')} className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
                 <Flame className="h-5 w-5" />
-                <span className="font-medium">Trending</span>
-              </a>
-              <a href="/komiks" className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
+                <span className="font-medium">Home</span>
+              </button>
+              <button onClick={() => navigate('/komiks')} className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
                 <BookOpen className="h-5 w-5" />
                 <span className="font-medium">Komiks</span>
-              </a>
-              <a href="/genre" className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
+              </button>
+              <button onClick={() => navigate('/genre')} className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
                 <span className="font-medium">Genre</span>
-              </a>
-              <a href="/ranking" className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
+              </button>
+              <button onClick={() => navigate('/ranking')} className="flex items-center space-x-2 text-white/90 hover:text-yellow-400 px-3 py-2 transition-colors duration-200">
                 <Trophy className="h-5 w-5" />
                 <span className="font-medium">Rankings</span>
-              </a>
+              </button>
             </div>
           </div>
 
@@ -55,10 +57,12 @@ const TopNavigation = () => {
 
           {/* Right side - BEONE Button, Login, and User Profile */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-300 transform hover:scale-105 transition-all duration-200">
+            <button
+              onClick={() => navigate('/beone')}
+              className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-300 transform hover:scale-105 transition-all duration-200"
+            >
               BEONE
             </button>
-            
             {isLoggedIn ? (
               // Logged in state
               <div className="relative">
@@ -77,12 +81,12 @@ const TopNavigation = () => {
                 {/* User Dropdown Menu */}
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-50">
-                    <a href="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                    <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50">
                       Profile
-                    </a>
-                    <a href="/settings" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                    </button>
+                    <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50">
                       Settings
-                    </a>
+                    </button>
                     <button 
                       onClick={() => setIsLoggedIn(false)}
                       className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-50"
@@ -120,24 +124,27 @@ const TopNavigation = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-gradient-to-b from-purple-600/50 to-blue-600/50 backdrop-blur-sm">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            <a href="/" className="flex items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
+            <button onClick={() => navigate('/')} className="flex w-full items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
               <Flame className="h-5 w-5" />
               <span>Trending</span>
-            </a>
-            <a href="/komiks" className="flex items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
+            </button>
+            <button onClick={() => navigate('/komiks')} className="flex w-full items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
               <BookOpen className="h-5 w-5" />
               <span>Komiks</span>
-            </a>
-            <a href="/genre" className="flex items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
+            </button>
+            <button onClick={() => navigate('/genre')} className="flex w-full items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
               <span>Genre</span>
-            </a>
-            <a href="/ranking" className="flex items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
+            </button>
+            <button onClick={() => navigate('/ranking')} className="flex w-full items-center space-x-2 text-white hover:text-yellow-400 px-3 py-2">
               <Trophy className="h-5 w-5" />
               <span>Rankings</span>
-            </a>
+            </button>
           </div>
           <div className="px-4 py-3 space-y-3">
-            <button className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-300 w-full transform hover:scale-105 transition-all duration-200">
+            <button 
+              onClick={() => navigate('/beone')}
+              className="bg-yellow-400 text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-yellow-300 w-full transform hover:scale-105 transition-all duration-200"
+            >
               BEONE
             </button>
             {!isLoggedIn && (

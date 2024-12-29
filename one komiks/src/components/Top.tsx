@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Heart, Timer, Sparkles, ChevronUp, ChevronDown } from 'lucide-react';
 
 const ComicsDashboard = () => {
-  // Sample data - in real app this would come from an API
   const [mostRead] = useState([
     { id: 1, title: "One Piece", genre: "Adventure", reads: "1.2M", rating: 4.8 },
     { id: 2, title: "Naruto", genre: "Action", reads: "1.1M", rating: 4.7 },
@@ -41,37 +40,45 @@ const ComicsDashboard = () => {
 
   const ComicCard = ({ comic, section, metric, icon: Icon }) => (
     <div 
-      className={`mb-2 transition-all duration-300 ${
+      className={`mb-3 transition-all duration-300 ${
         expandedCards[`${section}-${comic.id}`] ? 'bg-blue-50' : 'bg-white'
       }`}
     >
       <div
-        className="p-3 border rounded-lg shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+        className="p-4 border rounded-xl shadow-sm cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => toggleExpand(comic.id, section)}
       >
-        <div className="flex justify-between items-center">
-          <div className="flex-1">
-            <h3 className="font-semibold text-lg">{comic.title}</h3>
-            <Badge variant="secondary" className="mt-1">
+        <div className="flex justify-between items-start gap-4">
+          <div className="flex-1 space-y-2">
+            <h3 className="font-semibold text-lg leading-tight">{comic.title}</h3>
+            <Badge variant="secondary" className="text-xs">
               {comic.genre}
             </Badge>
           </div>
-          <div className="flex items-center gap-2">
-            <Icon className="w-4 h-4 text-blue-500" />
-            <span className="text-sm text-gray-600">{metric}</span>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <Icon className="w-5 h-5 text-blue-500" />
+              <span className="text-sm font-medium text-gray-600">{metric}</span>
+            </div>
             {expandedCards[`${section}-${comic.id}`] ? (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-4 h-4 text-gray-400" />
             ) : (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4 text-gray-400" />
             )}
           </div>
         </div>
         
         {expandedCards[`${section}-${comic.id}`] && (
-          <div className="mt-3 pt-3 border-t">
+          <div className="mt-4 pt-3 border-t">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Rating: {comic.rating}/5.0</span>
-              <button className="px-3 py-1 text-sm bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors">
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-600">Rating</span>
+                <div className="flex items-center gap-1">
+                  <span className="text-lg font-semibold text-blue-600">{comic.rating}</span>
+                  <span className="text-sm text-gray-500">/5.0</span>
+                </div>
+              </div>
+              <button className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                 Read Now
               </button>
             </div>
@@ -81,22 +88,30 @@ const ComicsDashboard = () => {
     </div>
   );
 
+  const SectionCard = ({ title, icon: Icon, iconColor, children }) => (
+    <Card 
+      className={`transition-all duration-300 hover:shadow-lg ${
+        hoveredSection === title ? 'transform scale-[1.02]' : ''
+      }`}
+      onMouseEnter={() => setHoveredSection(title)}
+      onMouseLeave={() => setHoveredSection(null)}
+    >
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-3 text-xl">
+          <Icon className={`w-6 h-6 ${iconColor}`} />
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="px-4 pb-4">
+        {children}
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
-      <Card 
-        className={`transition-transform duration-300 ${
-          hoveredSection === 'mostRead' ? 'scale-102' : ''
-        }`}
-        onMouseEnter={() => setHoveredSection('mostRead')}
-        onMouseLeave={() => setHoveredSection(null)}
-      >
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Heart className="text-red-500" />
-            Most Read
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <SectionCard title="Most Read" icon={Heart} iconColor="text-red-500">
           {mostRead.map(comic => (
             <ComicCard
               key={comic.id}
@@ -106,23 +121,9 @@ const ComicsDashboard = () => {
               icon={Heart}
             />
           ))}
-        </CardContent>
-      </Card>
+        </SectionCard>
 
-      <Card
-        className={`transition-transform duration-300 ${
-          hoveredSection === 'topWeekly' ? 'scale-102' : ''
-        }`}
-        onMouseEnter={() => setHoveredSection('topWeekly')}
-        onMouseLeave={() => setHoveredSection(null)}
-      >
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="text-yellow-500" />
-            Top Weekly
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+        <SectionCard title="Top Weekly" icon={Sparkles} iconColor="text-yellow-500">
           {topWeekly.map(comic => (
             <ComicCard
               key={comic.id}
@@ -132,23 +133,9 @@ const ComicsDashboard = () => {
               icon={Sparkles}
             />
           ))}
-        </CardContent>
-      </Card>
+        </SectionCard>
 
-      <Card
-        className={`transition-transform duration-300 ${
-          hoveredSection === 'newest' ? 'scale-102' : ''
-        }`}
-        onMouseEnter={() => setHoveredSection('newest')}
-        onMouseLeave={() => setHoveredSection(null)}
-      >
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Timer className="text-green-500" />
-            Newest
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+        <SectionCard title="Newest" icon={Timer} iconColor="text-green-500">
           {newest.map(comic => (
             <ComicCard
               key={comic.id}
@@ -158,8 +145,8 @@ const ComicsDashboard = () => {
               icon={Timer}
             />
           ))}
-        </CardContent>
-      </Card>
+        </SectionCard>
+      </div>
     </div>
   );
 };
